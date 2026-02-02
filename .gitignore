@@ -1,8 +1,54 @@
+# Python
 __pycache__/
 *.pyc
-.env
-*.sqlite3
+*.pyo
+*.pyd
+.Python
+*.so
+
+# Virtual environments
 .venv/
+venv/
+ENV/
+
+# Environment files
+.env
+.env.local
+.env.test
+
+# Database
+*.sqlite3
+*.db
+
+# Testing
 .pytest_cache/
 htmlcov/
 .coverage
+.coverage.*
+coverage.xml
+*.cover
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# macOS
+.DS_Store
+
+# Distribution
+dist/
+build/
+*.egg-info/
+*.egg
+
+# Logs
+*.log
+
+# Docker
+docker-compose.override.yml
+
+# uv
+.uv_cache/
