@@ -1,0 +1,30 @@
+[project]
+name = "comdigital-backend"
+version = "0.1.0"
+description = "Comdigital Backend Developer Test Case"
+requires-python = ">=3.14"
+dependencies = [
+    "alembic>=1.18.3",
+    "asyncpg>=0.31.0",
+    "bcrypt==4.3.0",
+    "fastapi>=0.128.0",
+    "httpx>=0.28.1",
+    "passlib[bcrypt]>=1.7.4",
+    "pydantic-settings>=2.12.0",
+    "pydantic[email]>=2.12.5",
+    "python-jose[cryptography]>=3.5.0",
+    "sqlalchemy[asyncio]>=2.0.46",
+    "uvicorn[standard]>=0.40.0",
+]
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28.1",
+    "pytest>=9.0.2",
+    "pytest-asyncio>=1.3.0",
+    "pytest-cov>=7.0.0",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]

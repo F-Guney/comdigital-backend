@@ -1,0 +1,36 @@
+services:
+  app:
+    build: .
+    restart: always
+    ports:
+      - "8080:80"
+    environment:
+      DATABASE_URL: postgresql+asyncpg://comdigital:comdigital@db:5432/comdigital_case
+      SECRET_KEY: change-this-in-production
+      DEBUG: false
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    image: postgres:18-alpine
+    restart: always
+    environment:
+      POSTGRES_DB: comdigital_case
+      POSTGRES_USER: comdigital
+      POSTGRES_PASSWORD: comdigital
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U comdigital -d comdigital_case" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  redis:
+    image: redis:8.4-alpine
+    restart: always
+    ports:
+      - "6379:6379"
+volumes:
+  postgres_data:
