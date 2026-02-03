@@ -51,15 +51,18 @@ Creates 3 test users and 25 items across 5 categories.
 uvicorn app.main:app --reload
 ```
 
-API available at `http://localhost:8080`. Swagger docs at `http://localhost:8080/docs`.
+API available at `http://localhost:8000`. Swagger docs at `http://localhost:8000/docs`.
 
 | Variable                      | Default                      | Description               |
 |-------------------------------|------------------------------|---------------------------|
-| `DATABASE_URL`                | `postgresql+asyncpg://comdigital:comdigital@db:5432/comdigital_case` | Async database URL   |
+| `DATABASE_URL`                | `postgresql+asyncpg://comdigital:comdigital@localhost:5432/comdigital_case` | Async database URL   |
 | `SECRET_KEY`                  | `secret`                     | JWT signing key           |
 | `ALGORITHM`                   | `HS256`                      | JWT algorithm             |
 | `ACCESS_TOKEN_EXPIRE_MINUTES` | `60`                         | Access token TTL (min)    |
 | `REFRESH_TOKEN_EXPIRE_MINUTES`| `3600`                       | Refresh token TTL (min)   |
+| `POOL_SIZE`                   | `20`                         | DB connection pool size   |
+| `MAX_OVERFLOW`                | `10`                         | Max overflow connections  |
+| `REDIS_URL`                   | `redis://localhost:6379/0`   | Redis cache URL           |
 | `DEBUG`                       | `false`                      | Enable SQL echo           |
 
 ## Running with Docker Compose (Full Stack)
@@ -70,7 +73,7 @@ To run the entire application in containers:
 docker compose up -d --build
 ```
 
-The API will be available at `http://localhost:8080`.
+The API will be available at `http://localhost:8000`.
 
 The app container automatically waits for the database, runs the seed script, and starts the server.
 

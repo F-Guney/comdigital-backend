@@ -3,7 +3,7 @@ services:
     build: .
     restart: always
     ports:
-      - "8080:80"
+      - "8000:80"
     environment:
       DATABASE_URL: postgresql+asyncpg://comdigital:comdigital@db:5432/comdigital_case
       SECRET_KEY: change-this-in-production
