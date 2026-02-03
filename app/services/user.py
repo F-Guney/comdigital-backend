@@ -91,7 +91,7 @@ async def refresh_user(session: AsyncSession, token: str) -> User | None:
 
 
 async def update_user(
-    session: AsyncSession, user: User, data: UpdateUserRequest
+        session: AsyncSession, user: User, data: UpdateUserRequest
 ):
     update_data = data.model_dump(exclude_unset=True)
 

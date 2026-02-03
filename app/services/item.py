@@ -1,13 +1,13 @@
 import logging
 import uuid
 from datetime import datetime
-
 from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.exceptions.handlers import NotFoundException
 from app.models.item import Item
 from app.schemas.item import CreateItemRequest, UpdateItemRequest
+from app.utils.cache import get_cached, set_cached, invalidate_cache
 
 logger = logging.getLogger(__name__)
 
@@ -15,6 +15,9 @@ _SORT_COLUMNS = {
     "created_at": Item.created_at,
     "name": Item.name,
 }
+
+ANALYTICS_CACHE_KEY = "analytics:category_density"
+ANALYTICS_CACHE_TTL = 300
 
 
 def _alive():
@@ -30,6 +33,9 @@ async def create_item(
     item = Item(**data.model_dump())
     session.add(item)
     await session.flush()
+    await session.refresh(item)
+
+    await invalidate_cache("analytics:*")
     logger.info("Item created: %s", item.id)
     return item
 
@@ -113,6 +119,13 @@ async def get_items(
 async def get_category_density(
     session: AsyncSession,
 ):
+    """Get category density in percentages - Cache first"""
+    cached = await get_cached(ANALYTICS_CACHE_KEY)
+
+    if cached:
+        logger.info("Cache hit: %s", cached)
+        return cached
+
     query = (
         select(Item.category, func.count(Item.id).label("count"))
         .where(_alive())
@@ -125,13 +138,20 @@ async def get_category_density(
 
     total = sum(row.count for row in rows)
 
-    categories = [
-        {
-            "category": row.category,
-            "count": row.count,
-            "percentage": round((row.count / total) * 100, 1) if total > 0 else 0,
-        }
-        for row in rows
-    ]
+    if total == 0:
+        data = {"total_items": 0, "categories": []}
+    else:
+        categories = [
+            {
+                "category": row.category,
+                "count": row.count,
+                "percentage": round((row.count / total) * 100, 1) if total > 0 else 0,
+            }
+            for row in rows
+        ]
+        data = {"total_items": total, "categories": categories}
 
-    return {"total_items": total, "categories": categories}
+    await set_cached(ANALYTICS_CACHE_KEY, data, ANALYTICS_CACHE_TTL)
+    logger.info("Analytics computed and cached")
+
+    return data

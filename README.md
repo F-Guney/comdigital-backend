@@ -26,7 +26,7 @@
 docker compose up -d
 
 # 2. Create the Test Database
-docker compose exec db psql -U comdigital -d comdigital_case -c "CREATE DATABASE comdigital_test;"
+docker compose exec <container_name> psql -U comdigital -d comdigital_case -c "CREATE DATABASE comdigital_test;"
 ```
 
 > **Docker note:** When running inside Docker Compose, the app service overrides `DATABASE_URL` with `db` as the hostname instead of `localhost`.
@@ -51,7 +51,7 @@ Creates 3 test users and 25 items across 5 categories.
 uvicorn app.main:app --reload
 ```
 
-API available at `http://localhost:8000`. Swagger docs at `http://localhost:8000/docs`.
+API available at `http://localhost:8080`. Swagger docs at `http://localhost:8080/docs`.
 
 | Variable                      | Default                      | Description               |
 |-------------------------------|------------------------------|---------------------------|

@@ -1,5 +1,4 @@
 import logging
-
 from fastapi import Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
@@ -9,12 +8,13 @@ logger = logging.getLogger(__name__)
 
 class AppException(Exception):
     """Base exception class for all exceptions raised by this module."""
+
     def __init__(
-            self,
-            status_code: int,
-            error: str,
-            message: str,
-            details: dict | None = None,
+        self,
+        status_code: int,
+        error: str,
+        message: str,
+        details: dict | None = None,
     ):
         self.status_code = status_code
         self.error = error
@@ -80,7 +80,7 @@ async def app_exception_handler(request: Request, exc: AppException) -> JSONResp
 
 
 async def validation_exception_handler(
-        _: Request, exc: RequestValidationError
+    _: Request, exc: RequestValidationError
 ) -> JSONResponse:
     return JSONResponse(
         status_code=422,

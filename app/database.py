@@ -9,8 +9,8 @@ settings = get_settings()
 engine = create_async_engine(
     settings.database_url,
     echo=settings.debug,
-    pool_size=20,
-    max_overflow=10,
+    pool_size=settings.pool_size,
+    max_overflow=settings.max_overflow,
 )
 
 async_session = async_sessionmaker(

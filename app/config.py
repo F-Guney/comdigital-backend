@@ -1,11 +1,15 @@
 from functools import lru_cache
-
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
     # DATABASE
     database_url: str = "postgresql+asyncpg://comdigital:comdigital@localhost:5432/comdigital_case"
+    pool_size: int = 20
+    max_overflow: int = 10
+
+    # Redis
+    redis_url: str = "redis://localhost:6379/0"
 
     # JWT
     secret_key: str = "secret"

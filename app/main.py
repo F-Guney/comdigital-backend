@@ -9,6 +9,7 @@ from app.models.base import Base
 from app.database import engine, get_db
 from app.routers.user import router as user_router
 from app.routers.item import router as item_router
+from app.utils.cache import close_redis
 from app.exceptions.handlers import (
     AppException,
     app_exception_handler,
@@ -26,6 +27,7 @@ async def lifespan(_: FastAPI):
         await conn.run_sync(Base.metadata.create_all)
     logger.info("Database connection established")
     yield
+    await close_redis()
     await engine.dispose()
     logger.info("Database connection closed")
 
